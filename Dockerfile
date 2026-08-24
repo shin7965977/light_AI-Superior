@@ -23,6 +23,6 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
     PATH="/root/.local/bin:${PATH}"
 
 COPY --from=builder /root/.local /root/.local
-COPY . /app
+COPY . .
 
 CMD ["python", "main.py"]
