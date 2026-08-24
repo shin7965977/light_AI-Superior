@@ -1,0 +1,13 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: smart-light-bulb:latest
+    container_name: smart-light-bulb
+    stdin_open: true
+    tty: true
+    env_file:
+      - .env
+    volumes:
+      - .:/app
