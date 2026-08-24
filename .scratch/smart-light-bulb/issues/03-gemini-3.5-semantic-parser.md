@@ -4,11 +4,11 @@
 
 **Blocked by:** 02: API Key Onboarding & Environment Persistence
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `GeminiParser` integrates with `gemini-3.5-flash` (configurable via `GEMINI_MODEL`).
-- [ ] Uses Structured Outputs adhering strictly to `ActionSchema` (Pydantic).
-- [ ] Passes current light bulb state context (`is_on`, `brightness`) with every query.
-- [ ] Correctly resolves "Toggle the light" based on current state (turns ON if OFF, turns OFF if ON).
-- [ ] Correctly resolves compound/negation commands like "Switch it back on instead of off".
-- [ ] Unit tests verify parser prompt assembly and intent mapping using mocked LLM responses (`unittest.mock`) without real network calls.
+- [x] `GeminiParser` integrates with `gemini-3.5-flash` (configurable via `GEMINI_MODEL`).
+- [x] Uses Structured Outputs adhering strictly to `ActionSchema` (Pydantic).
+- [x] Passes current light bulb state context (`is_on`, `brightness`) with every query.
+- [x] Correctly resolves "Toggle the light" based on current state (turns ON if OFF, turns OFF if ON).
+- [x] Correctly resolves compound/negation commands like "Switch it back on instead of off".
+- [x] Unit tests verify parser prompt assembly and intent mapping using mocked LLM responses (`unittest.mock`) without real network calls.

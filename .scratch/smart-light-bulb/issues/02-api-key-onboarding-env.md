@@ -4,10 +4,10 @@
 
 **Blocked by:** 01: Core Architecture & Base On/Off Command
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Startup routine checks environment variables and `.env` for `GEMINI_API_KEY`.
-- [ ] If missing, prompts the user in the terminal: "Please enter your Gemini API Key: ".
-- [ ] Automatically creates or updates the local `.env` file with the provided key.
-- [ ] Environment configuration reloads dynamically so subsequent LLM calls have access to the key.
-- [ ] Unit tests verify that missing keys trigger the onboarding handler and `.env` persistence works as expected.
+- [x] Startup routine checks environment variables and `.env` for `GEMINI_API_KEY`.
+- [x] If missing, prompts the user in the terminal: "Please enter your Gemini API Key: ".
+- [x] Automatically creates or updates the local `.env` file with the provided key.
+- [x] Environment configuration reloads dynamically so subsequent LLM calls have access to the key.
+- [x] Unit tests verify that missing keys trigger the onboarding handler and `.env` persistence works as expected.

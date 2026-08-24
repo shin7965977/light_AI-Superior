@@ -4,10 +4,10 @@
 
 **Blocked by:** 04: Brightness & Relative Adjustment Parsing
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] `structlog` configured to write structured JSON/formatted logs to `app.log`.
-- [ ] Tracks request latency (ms), token usage, and parser routing decisions (`gemini` vs `regex_fallback`).
-- [ ] Handles UNKNOWN / invalid intents (e.g., "What's the weather today?") with a helpful message without crashing.
-- [ ] Automatic fallback to `RegexParser` when Gemini API fails, timeouts, or hits rate limits.
-- [ ] Unit tests verify fallback triggering upon simulated API failures.
+- [x] `structlog` configured to write structured JSON/formatted logs to `app.log`.
+- [x] Tracks request latency (ms), token usage, and parser routing decisions (`gemini` vs `regex_fallback`).
+- [x] Handles UNKNOWN / invalid intents (e.g., "What's the weather today?") with a helpful message without crashing.
+- [x] Automatic fallback to `RegexParser` when Gemini API fails, timeouts, or hits rate limits.
+- [x] Unit tests verify fallback triggering upon simulated API failures.

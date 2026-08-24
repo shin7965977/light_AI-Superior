@@ -4,10 +4,10 @@
 
 **Blocked by:** 05: Observability, Error Handling & Fallback Routing
 
-**Status:** ready-for-agent
+**Status:** done
 
-- [ ] Multi-stage `Dockerfile` creating a lightweight, non-root user container.
-- [ ] `docker-compose.yml` configured for quick interactive terminal testing (`docker compose run app`).
-- [ ] GitHub Actions workflow `.github/workflows/ci.yml` running linting (`ruff`), type checking (`mypy`), and test suite (`pytest`).
-- [ ] Comprehensive `SOLUTION.md` containing Double Diamond development reasoning, architecture diagrams, and run instructions.
-- [ ] Code formatted and repository ready for presentation.
+- [x] Multi-stage `Dockerfile` creating a lightweight, non-root user container.
+- [x] `docker-compose.yml` configured for quick interactive terminal testing (`docker compose run app`).
+- [x] GitHub Actions workflow `.github/workflows/ci.yml` running linting (`ruff`), type checking (`mypy`), and test suite (`pytest`).
+- [x] Comprehensive `SOLUTION.md` containing Double Diamond development reasoning, architecture diagrams, and run instructions.
+- [x] Code formatted and repository ready for presentation.
