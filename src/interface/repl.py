@@ -6,7 +6,7 @@ from rich.console import Console
 
 from light_bulb import LightBulb
 from src.adapters.gemini_parser import GeminiParser
-from src.config import ensure_api_key_interactive
+from src.config import ensure_api_key_interactive, get_api_key
 from src.interface.ansi_bulb import render_light_bulb
 from src.observability import get_logger
 from src.ports.action_schema import ActionSchema, ActionType, BulbContext
@@ -43,9 +43,11 @@ class LightBulbCLI:
         )
 
     def display_ui(self) -> None:
-        """Renders the current state of the light bulb."""
+        """Renders the current state of the light bulb with dynamic parser engine badge."""
         self.console.clear()
-        self.console.print(render_light_bulb(self.bulb.is_on, self.bulb.brightness))
+        api_key = get_api_key()
+        engine_name = "Gemini 3.5 Flash" if (api_key and api_key.strip()) else "Regex Engine"
+        self.console.print(render_light_bulb(self.bulb.is_on, self.bulb.brightness, engine_name=engine_name))
         self.console.print("[dim]Type your command (e.g. 'turn on', 'dim by 20%', 'set to 70%') or 'exit' to quit:[/dim]\n")
 
     async def execute_action(self, action: ActionSchema) -> None:

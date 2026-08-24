@@ -4,8 +4,8 @@ from rich.panel import Panel
 from rich.text import Text
 
 
-def render_light_bulb(is_on: bool, brightness: float) -> Panel:
-    """Renders a dynamic ANSI ASCII light bulb with high-contrast, universally distinct color tiers."""
+def render_light_bulb(is_on: bool, brightness: float, engine_name: str = "Gemini 3.5 Flash") -> Panel:
+    """Renders a dynamic ANSI ASCII light bulb with high-contrast color tiers and dynamic engine subtitle."""
     pct = int(brightness * 100) if is_on else 0
 
     if not is_on or brightness <= 0.0:
@@ -94,7 +94,7 @@ def render_light_bulb(is_on: bool, brightness: float) -> Panel:
     return Panel(
         panel_content,
         title="[bold cyan]💡 Virtual Smart Light Bulb[/bold cyan]",
-        subtitle="[dim]Powered by Gemini 3.5 Flash[/dim]",
+        subtitle=f"[dim]Powered by {engine_name}[/dim]",
         border_style=border_color,
         expand=False,
         padding=(1, 4),
