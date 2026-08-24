@@ -86,6 +86,12 @@ async def test_regex_clarification_disambiguation():
     assert res1.clarification_prompt is not None
     assert len(res1.clarification_options) >= 2
 
+    # Isolated number without %: "5"
+    res_num = await parser.parse("5", ctx)
+    assert res_num.action == ActionType.CLARIFY
+    assert "5" in res_num.clarification_prompt
+    assert any("5%" in opt for opt in res_num.clarification_options)
+
     # Incomplete percentage: "20%"
     res2 = await parser.parse("20%", ctx)
     assert res2.action == ActionType.CLARIFY
@@ -95,11 +101,17 @@ async def test_regex_clarification_disambiguation():
     res3 = await parser.parse("turn", ctx)
     assert res3.action == ActionType.CLARIFY
 
+    # Typo: "trun on"
+    res_typo = await parser.parse("trun on", ctx)
+    assert res_typo.action == ActionType.CLARIFY
+
 
 @pytest.mark.asyncio
-async def test_regex_unknown():
+async def test_regex_unknown_clarification():
     parser = RegexParser()
     ctx = BulbContext(is_on=False, brightness=0.5)
 
+    # Broad clarification fallback for unrecognized commands
     res = await parser.parse("What is the weather today?", ctx)
-    assert res.action == ActionType.UNKNOWN
+    assert res.action == ActionType.CLARIFY
+    assert "What is the weather today?" in res.clarification_prompt
