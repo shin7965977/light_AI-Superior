@@ -20,7 +20,9 @@ WORKDIR /app
 
 ENV PYTHONDONTWRITEBYTECODE=1 \
     PYTHONUNBUFFERED=1 \
-    PATH="/root/.local/bin:${PATH}"
+    PATH="/root/.local/bin:${PATH}" \
+    TERM=xterm-256color \
+    COLORTERM=truecolor
 
 COPY --from=builder /root/.local /root/.local
 COPY . .

@@ -27,7 +27,7 @@ class LightBulbCLI:
     ):
         self.bulb = bulb or LightBulb()
         self.parser = parser or GeminiParser()
-        self.console = console or Console()
+        self.console = console or Console(force_terminal=True)
         self._session = session
 
     @property
