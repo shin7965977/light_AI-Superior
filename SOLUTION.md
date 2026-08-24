@@ -47,25 +47,27 @@ This document outlines the design, architecture, and implementation of the **Nat
 ## 🏗️ System Architecture & Data Flow
 
 ```mermaid
-flowchart TD
-    subgraph Interface Layer [Interface Layer]
+flowchart LR
+    subgraph UI_Input [1. User Input & CLI]
         A[User Input in Terminal] --> B[Async CLI REPL - prompt_toolkit]
-        G[ANSI Light Bulb Renderer - rich]
     end
 
-    subgraph Ports Layer [Ports / Application Layer]
+    subgraph Ports [2. Ports / Application Layer]
         B --> C[BaseParser Interface]
         C --> D[ActionSchema Pydantic Contract]
     end
 
-    subgraph Adapter Layer [Adapter Layer]
+    subgraph Adapters [3. Adapter Layer]
         C --> E[GeminiParser - gemini-3.5-flash]
         E -. API Error / Offline .-> F[RegexParser - Fallback]
     end
 
-    subgraph Domain Layer [Domain Layer]
+    subgraph Domain [4. Domain Layer]
         D --> H[LightBulb Entity]
-        H -->|State Changed Event| G
+    end
+
+    subgraph UI_Output [5. Dynamic Presentation]
+        H -->|State Changed Event| G[ANSI Light Bulb Renderer - rich]
     end
 
     subgraph Observability [Observability]
