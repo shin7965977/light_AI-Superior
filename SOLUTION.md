@@ -15,7 +15,7 @@ This document outlines the design, architecture, and implementation of the **Nat
   \───────────────/     \───────────────/     \───────────────/     \───────────────/
 ```
 
-### 1. Discover (發散探索)
+### 1. Discover
 - **Constraint Identification**: The original `LightBulb` class maintained internal state (`is_on`, `brightness`) and directly printed status messages to stdout.
 - **Linguistic Ambiguity & Context Dependency**:
   - *Absolute commands*: `"Turn on"`, `"Set brightness to 70%"`.
@@ -25,19 +25,19 @@ This document outlines the design, architecture, and implementation of the **Nat
   - *Invalid / Out-of-domain inputs*: `"What's the weather today?"`.
 - **Environment & DX**: Ephemeral security where API keys are loaded safely in-memory for the session without persistent storage, with full offline Regex fallback.
 
-### 2. Define (收斂定義)
+### 2. Define
 - **Layered Clean Architecture**: Strict decoupling into **Domain**, **Ports / Application**, **Adapters**, and **Interface** layers.
 - **Structured Action Contract**: Pydantic-based `ActionSchema` with typed `ActionType` (`TURN_ON`, `TURN_OFF`, `SET_BRIGHTNESS`, `CLARIFY`, `UNKNOWN`) and normalized float constraints (`0.0 <= value <= 1.0`).
 - **Context Injection**: State snapshot (`is_on`, `brightness`) is dynamically injected into parser prompts.
 
-### 3. Develop (發散實作)
+### 3. Develop
 - **Gemini 3.5 Flash Primary Parser**: Direct native integration with Google's latest `google-genai` SDK utilizing Structured Outputs (`response_schema=ActionSchema`).
 - **Interactive Disambiguation / Clarification**: Detects ambiguous intents and triggers interactive dialogue with selectable candidate options.
 - **Regex Fallback & Offline Resilience**: Local regex rule engine ensuring graceful degradation if the network drops or API quota is exhausted.
 - **Async Interactive CLI**: Powered by `asyncio`, `prompt_toolkit` (for non-blocking asynchronous user input), and `rich` (for dynamic TrueColor ANSI ASCII light bulb graphics).
 - **Comprehensive Test Suite**: 18 fast, deterministic unit tests with `unittest.mock` to verify state transitions, clarification rules, and parser logic in sub-second times.
 
-### 4. Deliver (收斂交付)
+### 4. Deliver
 - **Multi-Stage Dockerization**: Minimalist multi-stage `Dockerfile` and `docker-compose.yml` with TrueColor terminal support for isolated container execution.
 - **Automated CI/CD Pipeline**: GitHub Actions (`.github/workflows/ci.yml`) enforcing code style (`ruff`), type correctness (`mypy`), and test passing (`pytest`).
 - **Background Observability**: Non-intrusive structured logging with `structlog` outputting latency and token usage to `app.log`.
