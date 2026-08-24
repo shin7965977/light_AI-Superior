@@ -17,7 +17,7 @@ Current State Context:
 - is_on: {is_on}
 - brightness: {brightness} (range 0.0 to 1.0)
 
-Rules:
+Action Rules:
 1. "TURN_ON": Turns the light bulb on.
 2. "TURN_OFF": Turns the light bulb off.
 3. "SET_BRIGHTNESS": Sets the brightness to a specific float between 0.0 and 1.0.
@@ -30,13 +30,18 @@ Rules:
 5. Compound or Negation:
    - "Switch it back on instead of off" -> TURN_ON.
    - "Set it to 10% instead of 70%" -> SET_BRIGHTNESS with value 0.1.
-6. Unrelated or Invalid Inputs:
-   - If the input is not a light bulb command (e.g. "what is the weather today?"), return UNKNOWN with value null.
+6. "CLARIFY" (Interactive Disambiguation / Clarification):
+   - When the user's command is incomplete, ambiguous, or lacks specific parameters (e.g. "light", "it is dark in here", "change brightness", "20%"):
+   - Return action="CLARIFY".
+   - Set clarification_prompt with a clear, friendly question asking the user to clarify their intent.
+   - Set clarification_options with 2 to 4 concrete command suggestions that the user can pick from.
+7. Unrelated or Invalid Inputs:
+   - If the input is completely unrelated to lighting or smart bulb control (e.g. "what is the capital of France?"), return UNKNOWN with value null.
 """
 
 
 class GeminiParser(BaseParser):
-    """Primary parser utilizing Gemini 3.5 Flash with structured output and state context injection."""
+    """Primary parser utilizing Gemini 3.5 Flash with structured output, context injection, and interactive clarification."""
 
     def __init__(self, fallback_parser: BaseParser | None = None):
         self.fallback_parser = fallback_parser or RegexParser()
@@ -75,12 +80,10 @@ class GeminiParser(BaseParser):
 
             latency_ms = (time.perf_counter() - start_time) * 1000
 
-            # Parse structured output from response
             action: ActionSchema
             if response.parsed and isinstance(response.parsed, ActionSchema):
                 action = response.parsed
             else:
-                # Fallback to json text parsing if parsed attribute isn't directly loaded
                 action = ActionSchema.model_validate_json(response.text or "{}")
 
             logger.info(
@@ -88,6 +91,7 @@ class GeminiParser(BaseParser):
                 input_text=text,
                 action=action.action.value,
                 value=action.value,
+                clarification_prompt=action.clarification_prompt,
                 latency_ms=round(latency_ms, 2),
                 model=model_name,
             )

@@ -7,6 +7,7 @@ class ActionType(str, Enum):
     TURN_ON = "TURN_ON"
     TURN_OFF = "TURN_OFF"
     SET_BRIGHTNESS = "SET_BRIGHTNESS"
+    CLARIFY = "CLARIFY"
     UNKNOWN = "UNKNOWN"
 
 
@@ -26,4 +27,12 @@ class ActionSchema(BaseModel):
     reasoning: str | None = Field(
         default=None,
         description="Explanation of the parsed intent",
+    )
+    clarification_prompt: str | None = Field(
+        default=None,
+        description="Question asked to clarify user intent when ambiguous",
+    )
+    clarification_options: list[str] | None = Field(
+        default=None,
+        description="List of suggested options for disambiguation",
     )

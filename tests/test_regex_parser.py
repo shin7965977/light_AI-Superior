@@ -76,6 +76,27 @@ async def test_regex_compound_negation():
 
 
 @pytest.mark.asyncio
+async def test_regex_clarification_disambiguation():
+    parser = RegexParser()
+    ctx = BulbContext(is_on=False, brightness=0.5)
+
+    # Incomplete command: "light"
+    res1 = await parser.parse("light", ctx)
+    assert res1.action == ActionType.CLARIFY
+    assert res1.clarification_prompt is not None
+    assert len(res1.clarification_options) >= 2
+
+    # Incomplete percentage: "20%"
+    res2 = await parser.parse("20%", ctx)
+    assert res2.action == ActionType.CLARIFY
+    assert "20%" in res2.clarification_prompt
+
+    # Incomplete verb: "turn"
+    res3 = await parser.parse("turn", ctx)
+    assert res3.action == ActionType.CLARIFY
+
+
+@pytest.mark.asyncio
 async def test_regex_unknown():
     parser = RegexParser()
     ctx = BulbContext(is_on=False, brightness=0.5)

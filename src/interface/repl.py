@@ -16,7 +16,7 @@ logger = get_logger()
 
 
 class LightBulbCLI:
-    """Asynchronous interactive CLI REPL for controlling the LightBulb."""
+    """Asynchronous interactive CLI REPL for controlling the LightBulb with Disambiguation support."""
 
     def __init__(
         self,
@@ -60,8 +60,47 @@ class LightBulbCLI:
                 if not self.bulb.is_on and action.value > 0.0:
                     self.bulb.is_on = True
                 self.bulb.set_brightness(action.value)
+        elif action.action == ActionType.CLARIFY:
+            await self.handle_clarification(action)
         elif action.action == ActionType.UNKNOWN:
             self.console.print("[yellow]❓ Could not understand command. Please try again (e.g. 'turn on', 'dim by 20%').[/yellow]")
+
+    async def handle_clarification(self, action: ActionSchema) -> None:
+        """Handles interactive clarification dialogue when user intent is ambiguous."""
+        prompt_text = action.clarification_prompt or "Your command was unclear. What would you like to do?"
+        self.console.print(f"\n[bold cyan]❓ {prompt_text}[/bold cyan]")
+
+        options = action.clarification_options or []
+        if options:
+            for idx, opt in enumerate(options, 1):
+                self.console.print(f"  [bold yellow][{idx}][/bold yellow] {opt}")
+
+            try:
+                with patch_stdout():
+                    choice = await self.session.prompt_async(f"\n>>> Choose option [1-{len(options)}]: ")
+            except (EOFError, KeyboardInterrupt):
+                return
+
+            choice_str = choice.strip()
+            if choice_str.isdigit() and 1 <= int(choice_str) <= len(options):
+                chosen_command = options[int(choice_str) - 1]
+                self.console.print(f"[dim]Executing: {chosen_command}[/dim]")
+                resolved_action = await self.parser.parse(chosen_command, self.get_context())
+                # Avoid recursive clarify if option resolved to an action
+                if resolved_action.action != ActionType.CLARIFY:
+                    await self.execute_action(resolved_action)
+            elif choice_str:
+                resolved_action = await self.parser.parse(choice_str, self.get_context())
+                await self.execute_action(resolved_action)
+        else:
+            try:
+                with patch_stdout():
+                    followup = await self.session.prompt_async(">>> Please clarify: ")
+            except (EOFError, KeyboardInterrupt):
+                return
+            if followup.strip():
+                resolved_action = await self.parser.parse(followup.strip(), self.get_context())
+                await self.execute_action(resolved_action)
 
     async def run(self) -> None:
         """Runs the interactive async REPL."""
@@ -88,5 +127,5 @@ class LightBulbCLI:
             action = await self.parser.parse(text, context)
 
             await self.execute_action(action)
-            await asyncio.sleep(0.5)
+            await asyncio.sleep(0.6)
             self.display_ui()
