@@ -21,7 +21,7 @@ This project is built to fulfill and exceed all specifications outlined in the *
   * `"Please turn the light on"` ➔ `Light Bulb switched ON`
   * `"Now please turn it off"` ➔ `Light Bulb switched OFF`
   * `"Switch it back on instead of off"` ➔ `Light Bulb switched ON`
-* **How We Solved It**:
+* **How I Solved It**:
   * **Gemini 3.5 Flash Semantic Parser**: Ingests the full natural language sentence and resolves compound negations (e.g. distinguishing intent from contrastive clauses).
   * **Deterministic Regex Fallback**: Employs lookahead/compound regex pattern matching to ensure offline resilience for compound phrases.
 
@@ -29,14 +29,14 @@ This project is built to fulfill and exceed all specifications outlined in the *
 * **Requirement**: Support absolute brightness adjustments.
   * `"Please set the brightness to 70%"` ➔ `Light Bulb brightness set to 70%`
   * `"Now set it to 10% instead of 70%"` ➔ `Light Bulb brightness set to 10%`
-* **How We Solved It**:
+* **How I Solved It**:
   * **Pydantic Structured Action Contract**: Normalizes percentages into strict `float` values bounded between `0.0` and `1.0`.
 
 ### 3. Advanced Context-Aware Commands (Bonus & Notes)
 * **Requirement**: Support stateful and relative commands.
   * `"Toggle the light"`: Inverts state based on current bulb power status (`is_on`).
   * `"Reduce the brightness by 20%"`: Performs relative arithmetic calculation (`current_brightness - 0.20`).
-* **How We Solved It**:
+* **How I Solved It**:
   * **Dynamic State Context Injection**: Every parsing request injects a `BulbContext(is_on, brightness)` snapshot, enabling both the LLM and Regex engine to perform precise relative math and state inversion.
 
 ### 4. Interactive Disambiguation & Clarification (Beyond Requirements)
